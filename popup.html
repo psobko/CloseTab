@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Getting Started Extension's Popup</title>
+    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.css" type="text/css"/>
+    <link rel="stylesheet" href="lib/css/bootstrap-timepicker.min.css" type="text/css"/>
+
+    <script type="text/javascript" src="lib/js/underscore.js"></script>
+    <script type="text/javascript" src="lib/js/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="lib/js/jquery.timeago.js"></script>
+    <script type="text/javascript" src="lib/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="lib/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="core.js"></script>
+  <!-- <script type="text/javascript" src="lib/bootstrap/js/transition.js"></script>
+  <script type="text/javascript" src="lib/bootstrap/js/collapse.js"></script> -->
+    <script type="text/javascript" src="lib/js/bootstrap-datetimepicker.js"></script>
+    <script src="popup.js"></script>
+
+
+    <!-- <script type="text/javascript" src="lib/js/require.js"></script> -->
+    <style>
+      body {
+        font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+        font-size: 100%;
+      }
+      .timepicker-hour, .timepicker-minute
+      {
+        padding: 10px;
+      }
+
+      .timepicker .btn-primary
+      {
+        /*margin-left:10px;*/
+      }
+
+      .bootstrap-datetimepicker-widget .table-condensed > tbody > tr > td
+      {
+        padding:0px;
+      }
+
+      .bootstrap-datetimepicker-widget ul
+      {
+        margin-bottom: 0px;
+        width:170px;
+      }
+
+      .form-inline .radio, .form-inline .checkbox {
+        display: inline-block;
+        margin-top: 0;
+        margin-bottom: 0;
+        vertical-align: middle;
+      }
+      .form-inline .checkbox label
+      {
+        padding-left: 10px;
+      }
+      .form-inline .checkbox input[type="checkbox"] {
+        position: relative;
+        margin-left: 0;
+      }
+      .options-form {
+        /*margin-left: auto;*/
+        /*margin-right: auto;*/
+        /*width: 80%;*/
+        /*padding-right:10px;*/
+        padding-left:5px;
+      }
+
+      .hidden1 {
+        display : none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xs-12">
+          <h4>CloseTab</h4>
+          <!-- Countdown -->
+          <div id="countdown-container">
+            <h1 id="countdown-text" class="text-center">00:00:00</h1>
+          </div>
+          <!-- Controls -->
+          <div id="controls-container">
+            <!-- Time picker -->
+            <div class='input-group date' id='datetimepicker3'>
+              <input type='text' class="form-control" />
+              <span class="input-group-addon">
+                <span class="glyphicon glyphicon-time"></span>
+              </span>
+            </div>
+            <!-- Time Anchors -->
+            <p class="help-block text-center">
+              <a data-interval="10">+10 min</a> | 
+              <a data-interval="30">+30 min</a> | 
+              <a data-interval="60">+60 min</a>
+            </p>
+            <!-- Checkboxes -->
+            <div class="form-inline options-form">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" id="checkbox-mute"> Mute
+                </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" id="checkbox-dim"> Dim
+                </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" id="checkbox-close"> Close
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <!-- Bottom links -->
+         <a href="" id="button-primary" class="btn btn-success btn-lg btn-block" role="button">Set</a>
+         <p class="help-block pull-right"><a href="">Review</a> | <a href="">Need help?</a></p>
+       </div>
+     </div>
+   </div>
+ </body>
+</html>
+
