@@ -32,29 +32,20 @@ function updateTimerWithDate(date) {
     
     intervalID = setInterval(function() {
       duration.subtract(interval);
+      if(duration.isB)
       $countdownText.text(moment.utc(duration.asMilliseconds())
                                 .format("HH:mm:ss"));
     }, interval);
+    //TODO: reset on finish
 }
 
 function updateUI(sendResponse) {
-  consoleLog('updateUI:'+sendResponse.targetDate);
-  consoleLog(moment(sendResponse.targetDate).toString());
-  consoleLog(sendResponse.targetDate ? sendResponse.targetDate : 'NO DATE SET');
-  console.log(sendResponse);
-  if(sendResponse.targetDate !== null)
+  if(sendResponse.targetDate !== null) //Is Counting
   {
-    consoleLog('----Loging Obj-----');
-    consoleLog(sendResponse.targetDate.toString());
-    consoleLog(sendResponse.shouldMute);
-    consoleLog(sendResponse.shouldDim);
-    consoleLog(sendResponse.shouldClose);
-    consoleLog('-------------------');
     $('#checkbox-mute').prop('checked', sendResponse.shouldMute);
     $('#checkbox-dim').prop('checked', sendResponse.shouldDim);
     $('#checkbox-close').prop('checked', sendResponse.shouldClose);
     m = moment(sendResponse.targetDate);
-    // updateTimerWithDate(m.toDate());
     updateTimerWithDate(sendResponse.targetDate);
     toggleCountdown(true, false);
     updatePrimaryButton(true);
@@ -110,16 +101,16 @@ function updateDate()
       targetDate: m.valueOf(),
       shouldMute:$('#checkbox-mute').prop('checked'),
       shouldDim:$('#checkbox-dim').prop('checked'),
-      shouldCLose:$('#checkbox-close').prop('checked')
+      shouldClose:$('#checkbox-close').prop('checked')
     });
   });
 }
 
 function updatePrimaryButton(isCounting)
 {
-    $('#button-primary').toggleClass('btn-success', !isCounting)
-                        .toggleClass('btn-danger', isCounting)
-                        .text(isCounting ? 'START' : 'CANCEL');
+  $('#button-primary').toggleClass('btn-success', !isCounting)
+                      .toggleClass('btn-danger', isCounting)
+                      .text(isCounting ? 'CANCEL' : 'START');
 }
 
 /***********************************************************************
@@ -135,11 +126,9 @@ var intervalID;
 
  // document.write('<style type="text/css">body{display:none}</style>');
 
-$(document).ready(function()
-{
+$(document).ready(function() {
   consoleLog(new Date());
   consoleLog(m.toDate());
-// $('#timepicker1').timepicker();
   consoleLog('DOC READY');
    $countdownText = $('#countdown-text');
    $datePicker = $('#datetimepicker3');
@@ -154,9 +143,11 @@ $(document).ready(function()
   getPreviousDate();
 
   $('.options-form input:checkbox').change(function() {
-    if($(this).is(":checked")) {
-      //TODO: set options somehow
+     if(m.isBefore(new Date())) {
+      consoleLog('INVALID DATE');
+      return;
     }
+    updateDate();
   });
 
 // $countdownContainer.removeClass('hidden');
@@ -167,17 +158,14 @@ $(document).ready(function()
       if(isCounting) {
           updateTimerWithDate(m.toDate());
       }
-      // chrome.extension.getBackgroundPage().testRequest();
   });
 
   $('#button-primary').click(function(e) {
     e.preventDefault();
-    if(m.isBefore(new Date()))
-    {
+    if(m.isBefore(new Date())) {
       consoleLog('INVALID DATE');
       return;
     }
-    consoleLog(m.toDate());
     
     updateDate();
 

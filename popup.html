@@ -9,7 +9,7 @@
     <script type="text/javascript" src="lib/js/jquery-1.11.2.min.js"></script>
     <script type="text/javascript" src="lib/js/jquery.timeago.js"></script>
     <script type="text/javascript" src="lib/bootstrap/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="lib/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="lib/js/moment.min.js"></script>
     <script type="text/javascript" src="core.js"></script>
   <!-- <script type="text/javascript" src="lib/bootstrap/js/transition.js"></script>
   <script type="text/javascript" src="lib/bootstrap/js/collapse.js"></script> -->
@@ -22,6 +22,7 @@
       body {
         font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
         font-size: 100%;
+        width: 200px;
       }
       .timepicker-hour, .timepicker-minute
       {
@@ -91,7 +92,7 @@
             </div>
             <!-- Time Anchors -->
             <p class="help-block text-center">
-              <a data-interval="10">+10 min</a> | 
+              <a data-interval="0.1">+10 min</a> | 
               <a data-interval="30">+30 min</a> | 
               <a data-interval="60">+60 min</a>
             </p>

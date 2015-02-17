@@ -1,43 +1,55 @@
 var closetab = {};
 var _closetab = function(){
   var scope = this;
-
-  // this.TabOperation = Operation.None; //test site: http://ezswag.com/swagbucks/watcher/
-  // this._audioSourceCache = {}; // Dictionary for 'id', audiosource.
+  
   this.targetDate = null;
   this.shouldMute = false;
   this.shouldDim = false;
   this.shouldClose = false;
+  this.timerIntrvalID = null;
 
- console.log('hihihi');
-// console.log($this);
   this.$dimElement = null;
   this.$dimDialogElement = null;
 
-  this.StartTime = function(targetDate, shouldMute, shouldDim, shouldClose)
-  {
-    this.targetDate = targetDate;
-    this.shouldMute = shouldMute;
-    this.shouldDim = shouldDim;
-    this.shouldClose = shouldClose;
-    // setTimeout(function() { scope.StartTime(); }, targetDate.getTime());
+  /***********************************************************************
+   * Timer
+   ***********************************************************************/
+
+  this.StartTimer = function() {
+    clearInterval(this.timerIntrvalID);
+    var interval = this.targetDate - new Date().valueOf();
+    this.timerIntrvalID = setTimeout(function() { scope.TimerEnded();  }, interval);
   };
 
-  this.ToggleMute = function()
-  {
-  //TODO: implement
-  };
+  this.TimerEnded = function() {
+    if(this.shouldClose) {
+      this.CloseTab();
+      return;
+    }
+    
+    if(this.shouldDim) {
+      this.ToggleDim();
+    }
 
-  this.RemoveDim = function()
-  {
-    if(this.$dimElement !== null)
-    {
-      this.$dimElement.remove();
+    if(this.shouldMute) {
+      this.ToggleMute();
     }
   };
 
-  this.ToggleDim = function()
-  {
+  this.StopTimer = function() {
+    clearInterval(this.timerIntrvalID);
+  };
+
+  this.ClearTimer = function() {
+    this.targetDate = null;
+    clearInterval(this.timerIntrvalID);
+  };
+
+  /***********************************************************************
+   * Screen Dim
+   ***********************************************************************/
+
+  this.ToggleDim = function() {
     this.RemoveDim();
     this.$dimElement = $('<div></div>').css({
       "height":"100%",
@@ -72,22 +84,9 @@ var _closetab = function(){
     $('body').append(this.$dimElement);
     
     this.$dimElement.fadeIn();
-
-    console.log('here we go');
   };
 
-  this.StartTimer = function()
-  {
-
-  };
-
-  this.ResetTimer = function()
-  {
-
-  };
-
-  this.CancelFullcreen = function()
-  {
+  this.CancelFullcreen = function() {
     //tab.windowId
     chrome.windows.update(windowId, { state: "fullscreen" });
     /*
@@ -95,58 +94,45 @@ enum of "normal", "minimized", "maximized", or "fullscreen"
     */
   };
 
-  this.CloseTab = function()
-  {
-    // chrome.tabs.remove(integer or array of integer tabIds, function callback);
+  this.ToggleMute = function() {
+  //TODO: implement
   };
 
-/*
- * Message Listener
- */
-chrome.extension.onMessage.addListener(function(request, sender, sendResponse)
-{
-  console.log('request:'+request);
-  if (request.targetDate !== undefined)
-  {
-    console.log(scope);
-    scope.StartTime(request.targetDate, request.shouldMute, request.shouldDim, request.shouldClose);
-    console.log(request.targetDate);
-    console.log('set date:');
-    console.log(request.targetDate.toString());
-    console.log('self date:');
-    console.log(scope.targetDate);
-    console.log('self date:');
-    console.log(scope.targetDate.toString());
-    // scope.ToggleDim();
-        //get target date, etc
-  }
-  else if(request.command === 'getCloseTab')
-  {
-    console.log('getCloseTab Yo');
-    console.log(scope);
-    sendResponse(scope);
-  }
-});
+  this.RemoveDim = function() {
+    if(this.$dimElement !== null)
+    {
+      this.$dimElement.remove();
+    }
+  };
 
+  this.CloseTab = function() {
+    chrome.runtime.sendMessage({command: 'closeCallingTab'});
+  };
+
+  /***********************************************************************
+   * Messaging
+   ***********************************************************************/
+
+  chrome.extension.onMessage.addListener(function(request, sender, sendResponse)
+  {
+    console.log('request:'+request);
+    if (request && request.targetDate !== undefined)
+    {
+      scope.targetDate = request.targetDate;
+      scope.shouldMute = request.shouldMute;
+      scope.shouldDim = request.shouldDim;
+      scope.shouldClose = request.shouldClose;
+      scope.StartTimer();
+    }
+    else if(request.command === 'getCloseTab')
+    {
+      sendResponse(scope);
+    }
+    else if(request.command === 'cancelCountdown')
+    {
+      scope.StopTimer();
+    }
+  });
 };
 
 _closetab.call(closetab);
-
-// chrome.browserAction.onClicked.addListener(function(tab) {
-//  console.log('triggered');
-//   chrome.tabs.executeScript({
-//     code: 'document.body.style.backgroundColor="red"'
-//   });
-// });
-
-
-/* Listen for messages */
-// chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
-//     /* If the received message has the expected format... */
-//     console.log('aaaaaaaaaaaaaa');
-//     // if (msg.text && (msg.text == "report_back")) {
-//         /* Call the specified callback, passing 
-//            the web-pages DOM content as argument */
-//     // sendResponse(document.getElementById("mybutton").innerHTML);
-//     // }
-// });
